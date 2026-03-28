@@ -2,16 +2,40 @@
 
 import React from "react";
 import Link from "next/link";
+import Image, { StaticImageData } from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
+
+import trinityBanner from "../../images/projects/trinity/banner.png";
+import isopozalBanner from "../../images/projects/isopozal/banner.png";
 
 export interface ProjectData {
   slug: string;
   titleKey: string;
   descKey: string;
   techKey: string;
+  demoUrl?: string;
+  repoUrl?: string;
+  image?: StaticImageData;
 }
 
 export const projects: ProjectData[] = [
+  {
+    slug: "trinity",
+    titleKey: "projectTrinityTitle",
+    descKey: "projectTrinityDesc",
+    techKey: "projectTrinityTech",
+    demoUrl: "https://trinity-app.es",
+    image: trinityBanner,
+  },
+  {
+    slug: "isopozal",
+    titleKey: "projectIsopozalTitle",
+    descKey: "projectIsopozalDesc",
+    techKey: "projectIsopozalTech",
+    demoUrl: "https://danielibabet.github.io/isopozal/",
+    repoUrl: "https://github.com/danielibabet/isopozal",
+    image: isopozalBanner,
+  },
   {
     slug: "project-one",
     titleKey: "project1Title",
@@ -26,7 +50,7 @@ export const projects: ProjectData[] = [
   },
 ];
 
-function ProjectCard({ slug, titleKey, descKey, techKey }: ProjectData) {
+function ProjectCard({ slug, titleKey, descKey, techKey, image }: ProjectData) {
   const { t } = useLanguage();
   const techs = t(techKey).split(",");
 
@@ -36,10 +60,21 @@ function ProjectCard({ slug, titleKey, descKey, techKey }: ProjectData) {
       className="group block w-[340px] flex-shrink-0 sm:w-[380px]"
     >
       <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all hover:shadow-xl hover:-translate-y-1 dark:border-gray-800 dark:bg-gray-900">
-        {/* Image placeholder */}
-        <div className="flex h-48 items-center justify-center bg-gradient-to-br from-indigo-500/10 to-purple-500/10 dark:from-indigo-500/5 dark:to-purple-500/5">
-          <span className="text-4xl opacity-40">🖼️</span>
-        </div>
+        {/* Image or placeholder */}
+        {image ? (
+          <div className="relative h-48 w-full overflow-hidden">
+            <Image
+              src={image}
+              alt={titleKey}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
+        ) : (
+          <div className="flex h-48 items-center justify-center bg-gradient-to-br from-indigo-500/10 to-purple-500/10 dark:from-indigo-500/5 dark:to-purple-500/5">
+            <span className="text-4xl opacity-40">🖼️</span>
+          </div>
+        )}
 
         <div className="flex flex-1 flex-col p-6">
           <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">

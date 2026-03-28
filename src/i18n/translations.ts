@@ -33,7 +33,15 @@ export const translations: Record<Locale, Record<string, string>> = {
     project2Desc:
       "An enterprise-grade solution focused on performance, accessibility, and clean architecture.",
     project2Tech: "Node.js,Express,PostgreSQL,Docker",
-    liveDemo: "Live Demo",
+    projectTrinityTitle: "Trinity App",
+    projectTrinityDesc:
+      "A mobile app that ends the 'infinite scroll' when picking what to watch. Built with a 100% Serverless architecture on AWS, featuring real-time automatic matching via GraphQL Subscriptions.",
+    projectTrinityTech: "React Native,AWS Serverless,AWS AppSync,GraphQL,TypeScript,DynamoDB",
+    projectIsopozalTitle: "IsoPozal",
+    projectIsopozalDesc:
+      "An open-source web tool for designing AWS architecture diagrams in an isometric perspective. Features include PNG export, JSON state save/load, and a custom dark theme.",
+    projectIsopozalTech: "React,TypeScript,AWS,Open Source",
+    liveDemo: "Website",
     viewCode: "GitHub",
     backToProjects: "Back to projects",
 
@@ -102,7 +110,15 @@ export const translations: Record<Locale, Record<string, string>> = {
     project2Desc:
       "Una solución empresarial enfocada en rendimiento, accesibilidad y arquitectura limpia.",
     project2Tech: "Node.js,Express,PostgreSQL,Docker",
-    liveDemo: "Demo en Vivo",
+    projectTrinityTitle: "Trinity App",
+    projectTrinityDesc:
+      "App móvil para acabar con el 'scroll infinito' al decidir qué ver. Construida con arquitectura 100% Serverless en AWS, incluye 'match' automático en tiempo real usando GraphQL Subscriptions.",
+    projectTrinityTech: "React Native,AWS Serverless,AWS AppSync,GraphQL,TypeScript,DynamoDB",
+    projectIsopozalTitle: "IsoPozal",
+    projectIsopozalDesc:
+      "Herramienta web open-source para diseñar diagramas de arquitectura AWS en perspectiva isométrica. Permite exportar a PNG, guardar/cargar estado en JSON y cuenta con tema oscuro.",
+    projectIsopozalTech: "React,TypeScript,AWS,Open Source",
+    liveDemo: "Sitio web",
     viewCode: "GitHub",
     backToProjects: "Volver a proyectos",
 

@@ -15,6 +15,11 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
+  scroll-snap-type: y mandatory;
+}
+
+section {
+  scroll-snap-align: start;
 }
 
 /* ── Custom scrollbar ── */
