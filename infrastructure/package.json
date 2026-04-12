@@ -1,0 +1,26 @@
+{
+  "name": "agenda-infrastructure",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build":       "tsc",
+    "watch":       "tsc -w",
+    "synth":       "npx cdk synth",
+    "deploy":      "npx cdk deploy --outputs-file cdk-outputs.json",
+    "destroy":     "npx cdk destroy",
+    "env":         "node scripts/write-env.js",
+    "create-user": "node scripts/create-user.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "aws-cdk": "^2.100.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.7.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.0.0",
+    "aws-cdk-lib": "^2.100.0",
+    "constructs": "^10.0.0",
+    "source-map-support": "^0.5.21"
+  }
+}

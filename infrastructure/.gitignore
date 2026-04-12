@@ -1,0 +1,11 @@
+# CDK output artifacts — do NOT commit
+cdk.out/
+cdk-outputs.json
+dist/
+
+# Node
+node_modules/
+
+# TypeScript build cache
+*.js.map
+*.d.ts
