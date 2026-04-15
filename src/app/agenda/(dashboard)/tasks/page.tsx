@@ -145,8 +145,7 @@ export default function TasksPage() {
 
   return (
     <SpaceBetween size="l">
-      <Header variant="h1" description={`${pending} tareas pendientes · ${tasks.length - pending} completadas`}
-        actions={<Button iconName="refresh" onClick={fetchTasks} loading={loading}>Actualizar</Button>}>
+      <Header variant="h1" description={`${pending} tareas pendientes · ${tasks.length - pending} completadas`}>
         Tareas Pendientes
       </Header>
 

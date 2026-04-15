@@ -1,6 +1,14 @@
-import { redirect } from "next/navigation";
+"use client";
 
-/** Root /agenda redirects to the first section */
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+/** Root /agenda redirects to the first section (Client-side to support static export) */
 export default function AgendaIndexPage() {
-  redirect("/agenda/shopping");
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/agenda/shopping");
+  }, [router]);
+
+  return null;
 }

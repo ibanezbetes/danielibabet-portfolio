@@ -121,8 +121,7 @@ export default function LinksPage() {
 
   return (
     <SpaceBetween size="l">
-      <Header variant="h1" description={`${links.length} enlaces guardados`}
-        actions={<Button iconName="refresh" onClick={fetchLinks} loading={loading}>Actualizar</Button>}>
+      <Header variant="h1" description={`${links.length} enlaces guardados`}>
         Links y Noticias
       </Header>
 

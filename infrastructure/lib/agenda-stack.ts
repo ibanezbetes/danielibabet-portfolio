@@ -11,7 +11,7 @@ import { Construct } from "constructs";
  *  2. Cognito User Pool Client   → Public app client (no secret) for browser use
  *  3. Cognito Identity Pool      → Exchanges JWT for temporary AWS credentials
  *  4. IAM Authenticated Role     → Least-privilege DynamoDB access for logged-in users
- *  5. DynamoDB Tables (x4)       → agenda-shopping | agenda-tasks | agenda-library | agenda-links
+ *  5. DynamoDB Tables (x6)       → agenda-shopping | agenda-tasks | agenda-library | agenda-links | agenda-shift-types | agenda-shift-entries
  *
  * Always Free Tier:
  *  - DynamoDB PAY_PER_REQUEST: always free ≤ 25 GB + 200M req/month
@@ -28,19 +28,18 @@ export class AgendaStack extends cdk.Stack {
     // 1. Cognito User Pool
     // ──────────────────────────────────────────────────────────────────────────
 
-    const userPool = new cognito.UserPool(this, "AgendaUserPool", {
-      userPoolName: "agenda-user-pool",
-      selfSignUpEnabled: false,           // Admin-only registration (only you)
-      signInAliases: { email: true },
-      autoVerify: { email: true },
+    const userPool = new cognito.UserPool(this, "AgendaUserPoolV2", {
+      userPoolName: "agenda-user-pool-v2",
+      selfSignUpEnabled: false,           // Admin-only registration
+      signInAliases: { username: true },
       passwordPolicy: {
-        minLength: 8,
-        requireLowercase: true,
+        minLength: 6,
+        requireLowercase: false,
         requireUppercase: false,
-        requireDigits: true,
+        requireDigits: false,
         requireSymbols: false,
       },
-      accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
+      accountRecovery: cognito.AccountRecovery.NONE,
       removalPolicy: cdk.RemovalPolicy.RETAIN, // Keep user data on stack updates
     });
 
@@ -87,6 +86,18 @@ export class AgendaStack extends cdk.Stack {
       partitionKey: { name: "linkId", type: dynamodb.AttributeType.STRING },
     });
 
+    const shiftTypesTable = new dynamodb.Table(this, "ShiftTypesTable", {
+      ...(tableConfig as dynamodb.TableProps),
+      tableName: "agenda-shift-types",
+      partitionKey: { name: "shiftTypeId", type: dynamodb.AttributeType.STRING },
+    });
+
+    const shiftEntriesTable = new dynamodb.Table(this, "ShiftEntriesTable", {
+      ...(tableConfig as dynamodb.TableProps),
+      tableName: "agenda-shift-entries",
+      partitionKey: { name: "dateKey", type: dynamodb.AttributeType.STRING },
+    });
+
     // ──────────────────────────────────────────────────────────────────────────
     // 4. Cognito Identity Pool (CfnIdentityPool — stable L1 construct)
     //    Exchanges the Cognito User Pool JWT for temporary STS credentials
@@ -127,8 +138,8 @@ export class AgendaStack extends cdk.Stack {
       ),
     });
 
-    // Grant read+write on all 4 agenda tables
-    for (const table of [shoppingTable, tasksTable, libraryTable, linksTable]) {
+    // Grant read+write on all 6 agenda tables
+    for (const table of [shoppingTable, tasksTable, libraryTable, linksTable, shiftTypesTable, shiftEntriesTable]) {
       table.grantReadWriteData(authenticatedRole);
     }
 

@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "export",
+  images: {
+    unoptimized: true,
+  },
   // Cloudscape components are distributed as ESM — Next.js needs to transpile them
   transpilePackages: [
     "@cloudscape-design/components",

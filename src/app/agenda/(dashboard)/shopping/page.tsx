@@ -199,15 +199,6 @@ export default function ShoppingPage() {
       <Header
         variant="h1"
         description={`${items.length} items · ${checkedCount} comprados`}
-        actions={
-          <Button
-            iconName="refresh"
-            onClick={fetchItems}
-            loading={loading}
-          >
-            Actualizar
-          </Button>
-        }
       >
         Lista de la Compra
       </Header>

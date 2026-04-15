@@ -23,16 +23,24 @@ const navItems: SideNavigationProps.Item[] = [
   { type: "link", text: "Links y Noticias", href: "/agenda/links" },
   { type: "divider" },
   { type: "link", text: "Calendario", href: "/agenda/calendar" },
+  { type: "link", text: "Calendario Laboral", href: "/agenda/shifts" },
 ];
 
 // ─── Inner layout (needs auth context) ────────────────────────────────────────
 
 function AgendaLayoutInner({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading, userEmail, logout } = useAgendaAuth();
+  const { isAuthenticated, isLoading, username, logout } = useAgendaAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [darkMode, setDarkMode] = useState(true);
-  const [navOpen, setNavOpen] = useState(true);
+  const [navOpen, setNavOpen] = useState(false);
+
+  useEffect(() => {
+    // Open side navigation by default on desktop, keep closed on mobile
+    if (typeof window !== "undefined" && window.innerWidth >= 768) {
+      setNavOpen(true);
+    }
+  }, []);
 
   // Apply Cloudscape theme
   useEffect(() => {
@@ -73,11 +81,29 @@ function AgendaLayoutInner({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <style>{`
+        html { scroll-padding-top: 70px; }
+        /* Ocultar la barra secundaria nativa (hamburguesa) de Cloudscape en móviles */
+        [class*="awsui_mobile-bar_"], [class*="awsui_navigation-toggle_"] {
+          display: none !important;
+        }
+      `}</style>
       {/* Top navigation */}
-      <div id="agenda-top-nav">
+      <div 
+        id="agenda-top-nav" 
+        style={{ position: "sticky", top: 0, zIndex: 1002 }}
+        onClick={(e) => {
+          const target = e.target as HTMLElement;
+          const anchor = target.closest("a");
+          if (anchor && anchor.getAttribute("href") === "#") {
+            e.preventDefault();
+            setNavOpen((prev) => !prev);
+          }
+        }}
+      >
         <TopNavigation
           identity={{
-            href: "/agenda",
+            href: "#",
             title: "Agenda Personal",
             logo: { src: "/favicon.ico", alt: "Agenda" },
           }}
@@ -90,7 +116,7 @@ function AgendaLayoutInner({ children }: { children: React.ReactNode }) {
             },
             {
               type: "menu-dropdown",
-              text: userEmail ?? "Usuario",
+              text: username || "Perfil",
               iconName: "user-profile",
               items: [
                 { id: "portfolio", text: "← Volver al Portfolio", href: "/" },
@@ -107,6 +133,8 @@ function AgendaLayoutInner({ children }: { children: React.ReactNode }) {
       {/* Main layout */}
       <AppLayout
         headerSelector="#agenda-top-nav"
+        navigationOpen={navOpen}
+        onNavigationChange={(e) => setNavOpen(e.detail.open)}
         navigation={
           <SideNavigation
             header={{ text: "Secciones", href: "/agenda" }}
@@ -118,8 +146,6 @@ function AgendaLayoutInner({ children }: { children: React.ReactNode }) {
             }}
           />
         }
-        navigationOpen={navOpen}
-        onNavigationChange={(e) => setNavOpen(e.detail.open)}
         content={<Box padding="l">{children}</Box>}
         toolsHide
       />

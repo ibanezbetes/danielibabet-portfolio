@@ -16,7 +16,7 @@ import { useAgendaAuth } from "@/context/AgendaAuthContext";
 
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -37,15 +37,15 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await login(email, password);
+      await login(username, password);
       router.push(from);
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Error de autenticación.";
       if (message.includes("Incorrect username or password")) {
-        setError("Email o contraseña incorrectos.");
+        setError("Usuario o contraseña incorrectos.");
       } else if (message.includes("User does not exist")) {
-        setError("No existe un usuario con ese email.");
+        setError("No existe ese usuario.");
       } else if (message.includes("Password reset required")) {
         setError("Debes restablecer tu contraseña desde la consola de AWS.");
       } else {
@@ -98,13 +98,13 @@ export default function LoginPage() {
                     {error}
                   </Alert>
                 )}
-                <FormField label="Email" controlId="login-email">
+                <FormField label="Usuario" controlId="login-username">
                   <Input
-                    id="login-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.detail.value)}
-                    placeholder="email"
+                    id="login-username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.detail.value)}
+                    placeholder="ej. danielibabet"
                     autoFocus
                     disabled={loading}
                   />

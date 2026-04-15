@@ -134,7 +134,6 @@ export default function LibraryPage() {
       <Header variant="h1" description={`${entries.length} entradas · ${byType("Serie").length} series · ${byType("Película").length} películas · ${byType("Videojuego").length} juegos`}
         actions={
           <SpaceBetween direction="horizontal" size="s">
-            <Button iconName="refresh" onClick={fetchEntries} loading={loading}>Actualizar</Button>
             <Button variant="primary" iconName="add-plus" onClick={() => setModalOpen(true)}>Añadir</Button>
           </SpaceBetween>
         }>

@@ -26,4 +26,6 @@ export const TABLES = {
   TASKS: "agenda-tasks",
   LIBRARY: "agenda-library",
   LINKS: "agenda-links",
+  SHIFT_TYPES: "agenda-shift-types",
+  SHIFT_ENTRIES: "agenda-shift-entries",
 } as const;

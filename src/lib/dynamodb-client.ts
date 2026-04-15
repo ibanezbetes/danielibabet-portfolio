@@ -24,7 +24,7 @@ export function createDynamoDBClient(idToken: string): DynamoDBDocumentClient {
   const dynamoDBClient = new DynamoDBClient({
     region: awsConfig.region,
     credentials: fromCognitoIdentityPool({
-      client: cognitoIdentityClient,
+      client: cognitoIdentityClient as any,
       identityPoolId: awsConfig.cognito.identityPoolId,
       logins: {
         [providerKey]: idToken,

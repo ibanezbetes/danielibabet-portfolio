@@ -27,8 +27,8 @@ interface AgendaAuthContextValue {
   isAuthenticated: boolean;
   isLoading: boolean;
   tokens: AuthTokens | null;
-  userEmail: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  username: string | null;
+  login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -37,7 +37,7 @@ interface AgendaAuthContextValue {
 const AgendaAuthContext = createContext<AgendaAuthContextValue | null>(null);
 
 const SESSION_KEY = "agenda_tokens";
-const EMAIL_KEY = "agenda_user_email";
+const USERNAME_KEY = "agenda_username";
 const COOKIE_NAME = "agenda_auth";
 
 // ─── Cookie helpers (client-side only) ────────────────────────────────────────
@@ -55,18 +55,18 @@ function clearAuthCookie() {
 
 export function AgendaAuthProvider({ children }: { children: React.ReactNode }) {
   const [tokens, setTokens] = useState<AuthTokens | null>(null);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Rehydrate from sessionStorage on mount
   useEffect(() => {
     try {
       const stored = sessionStorage.getItem(SESSION_KEY);
-      const email = sessionStorage.getItem(EMAIL_KEY);
+      const user = sessionStorage.getItem(USERNAME_KEY);
       if (stored) {
         const parsed: AuthTokens = JSON.parse(stored);
         setTokens(parsed);
-        setUserEmail(email);
+        setUsername(user);
         setAuthCookie(parsed.idToken);
       }
     } catch {
@@ -77,7 +77,7 @@ export function AgendaAuthProvider({ children }: { children: React.ReactNode }) 
     }
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (usernameVal: string, password: string) => {
     const client = new CognitoIdentityProviderClient({
       region: awsConfig.region,
     });
@@ -86,7 +86,7 @@ export function AgendaAuthProvider({ children }: { children: React.ReactNode }) 
       AuthFlow: "USER_PASSWORD_AUTH",
       ClientId: awsConfig.cognito.clientId,
       AuthParameters: {
-        USERNAME: email,
+        USERNAME: usernameVal,
         PASSWORD: password,
       },
     });
@@ -106,11 +106,11 @@ export function AgendaAuthProvider({ children }: { children: React.ReactNode }) 
 
     // Persist
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(newTokens));
-    sessionStorage.setItem(EMAIL_KEY, email);
+    sessionStorage.setItem(USERNAME_KEY, usernameVal);
     setAuthCookie(newTokens.idToken);
 
     setTokens(newTokens);
-    setUserEmail(email);
+    setUsername(usernameVal);
   }, []);
 
   const logout = useCallback(async () => {
@@ -128,10 +128,10 @@ export function AgendaAuthProvider({ children }: { children: React.ReactNode }) 
     }
 
     sessionStorage.removeItem(SESSION_KEY);
-    sessionStorage.removeItem(EMAIL_KEY);
+    sessionStorage.removeItem(USERNAME_KEY);
     clearAuthCookie();
     setTokens(null);
-    setUserEmail(null);
+    setUsername(null);
   }, [tokens]);
 
   const value = useMemo<AgendaAuthContextValue>(
@@ -139,11 +139,11 @@ export function AgendaAuthProvider({ children }: { children: React.ReactNode }) 
       isAuthenticated: !!tokens,
       isLoading,
       tokens,
-      userEmail,
+      username,
       login,
       logout,
     }),
-    [tokens, isLoading, userEmail, login, logout]
+    [tokens, isLoading, username, login, logout]
   );
 
   return (
